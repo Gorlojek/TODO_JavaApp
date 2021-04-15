@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -13,43 +12,35 @@ public class Main {
         String[][] tasks = taskArr();
         String[] programMethods = {"add", "list", "remove", "exit"};
         System.out.println(ConsoleColors.BLUE + "Please select an option:" + ConsoleColors.RESET);
-        for (String s: programMethods){
+        for (String s : programMethods) {
             System.out.println(s);
         }
-
         Scanner scanner = new Scanner(System.in);
-        while(!scanner.nextLine().equals("exit")){
-            String command = scanner.nextLine();
-        if (command.equals("add")) {
-            tasks = addTask(tasks);
-            scanner.next();
-        } else if (command.equals("list")) {
-            tasksReader(tasks);
-            scanner.next();
-        }
-        else if (command.equals("remove")){
-            tasks =removeTask(tasks);
-            scanner.next();
-        }
-        }
-        if (scanner.nextLine().equals("exit")) {
-            saveArr(tasks);
-        }
+        String command = scanner.nextLine();
+        while (!command.equals("add") && !command.equals("remove") && !command.equals("list") && !command.equals("exit")) {
+            System.out.println("Podaj poprawną komendę do wykonania");
+            command = scanner.nextLine();
 
-       /*Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        switch (input){
-            case "add":
-                addTask();
-                break;
         }
+        while (!command.equals("exit")) {
+            if (command.equals("add")) {
+                tasks = addTask(tasks);
 
-*/
+            }
+            if (command.equals("remove")) {
+                tasks = removeTask(tasks);
+
+            }
+            if (command.equals("list")) {
+                tasksReader(tasks);
+
+            }
+            System.out.println(ConsoleColors.BLUE + "Wpisz kolejne polecenie do wykonania" + ConsoleColors.RESET);
+            command = scanner.nextLine();
+        }
+        saveArr(tasks);
 
     }
-
-
-
 
 
     public static String[][] taskArr() throws IOException {
@@ -65,7 +56,7 @@ public class Main {
 
     public static void tasksReader(String[][] tasks) throws IOException {
         for (int i = 0; i < tasks.length; i++) {
-            System.out.print(i + ": ");
+            System.out.print(i + 1 + ": ");
             for (int j = 0; j < tasks[i].length; j++) { //this equals to the column in each row.
                 if (j < tasks[i].length - 1) {
                     System.out.print(tasks[i][j] + " ");
@@ -96,19 +87,20 @@ public class Main {
     }
 
     //metoda remove
-    public static String[][] removeTask(String[][] tasks){
+    public static String[][] removeTask(String[][] tasks) {
         System.out.println("Podaj numer zadania, który chcesz usunąć");
         Scanner sc = new Scanner(System.in);
-        int i = sc.nextInt();
-        tasks = ArrayUtils.remove(tasks,i);
+        int i = sc.nextInt() - 1;
+        tasks = ArrayUtils.remove(tasks, i);
         return tasks;
     }
+
     //metoda exit
     public static void saveArr(String[][] tasks) {
         File file = new File("tasks.csv");
         try (PrintWriter pw = new PrintWriter(file);) {
             for (String[] singleTask : tasks) {
-                for (int j = 0; j < singleTask.length; j++) { //this equals to the column in each row.
+                for (int j = 0; j < singleTask.length; j++) {
                     if (j < singleTask.length - 1) {
                         pw.print(singleTask[j]);
                         pw.print(", ");
