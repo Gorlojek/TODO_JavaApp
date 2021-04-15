@@ -1,9 +1,6 @@
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -29,7 +26,7 @@ public class Main {
 
             }
             if (command.equals("remove")) {
-                 tasks = removeTask(tasks);
+                tasks = removeTask(tasks);
 
             }
             if (command.equals("list")) {
@@ -58,34 +55,47 @@ public class Main {
     public static void tasksReader(String[][] tasks) {
         for (int i = 0; i < tasks.length; i++) {
             System.out.print(i + 1 + ": ");
-            for (int j = 0; j < tasks[i].length; j++) { //this equals to the column in each row.
+            for (int j = 0; j < tasks[i].length; j++) {
                 if (j < tasks[i].length - 1) {
                     System.out.print(tasks[i][j] + " ");
                 } else {
-                    System.out.println(tasks[i][j]);
+                    if (tasks[i][j].equals("true")){
+                        System.out.println(ConsoleColors.RED + tasks[i][j] + ConsoleColors.RESET);
+                    }
+                    else{
+                        System.out.println(ConsoleColors.GREEN+ tasks[i][j] + ConsoleColors.RESET);
+                    }
+
                 }
             }
 
         }
     }
 
-    // metoda add DO DOPISANIA metody poprawności daty i płci
+    // metoda add DO DOPISANIA metody poprawności daty
     public static String[][] addTask(String[][] tasks) {
         System.out.println("Proszę o podanie nowego zadnia do dodania");
         Scanner sc = new Scanner(System.in);
         String[] newTask = new String[3];
-        System.out.println("Podaj opis nowego zadania: ");
+        System.out.println(ConsoleColors.CYAN_BOLD +"Podaj opis nowego zadania: ");
 
         newTask[0] = sc.nextLine();
         System.out.println("Podaj termin wykonania zadania: ");
         newTask[1] = sc.nextLine();
         System.out.println("Podaj czy zadanie jest pilne: ");
-        newTask[2] = sc.nextLine();
+        while (!sc.hasNextBoolean()) {
+            sc.next();
+            System.out.println(ConsoleColors.RED_BOLD +"Podaj poprawną wartość:" + ConsoleColors.RESET +"\ntrue - jeżeli zadanie jest pilne\nfalse - jeżeli zadanie nie jest pilne");
+        }
+        boolean priority = sc.nextBoolean();
+        newTask[2] = Boolean.toString(priority);
+
 
         tasks = Arrays.copyOf(tasks, tasks.length + 1);
         tasks[tasks.length - 1] = newTask;
         return tasks;
     }
+
 
     //metoda remove
     public static String[][] removeTask(String[][] tasks) {
@@ -95,8 +105,8 @@ public class Main {
             if (sc.hasNextInt()) {
                 int i = sc.nextInt() - 1;
                 if (i >= 0 && i < tasks.length) {
-                   tasks = ArrayUtils.remove(tasks, i);
-                   return tasks;
+                    tasks = ArrayUtils.remove(tasks, i);
+                    return tasks;
                 }
             } else {
                 sc.next();
@@ -109,6 +119,7 @@ public class Main {
     //metoda exit
     public static void saveArr(String[][] tasks) {
         File file = new File("tasks.csv");
+        System.out.println(ConsoleColors.RED + "Bye,bye!");
         try (PrintWriter pw = new PrintWriter(file)) {
             for (String[] singleTask : tasks) {
                 for (int j = 0; j < singleTask.length; j++) {
@@ -124,6 +135,7 @@ public class Main {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
     }
 
     // dodawanie dynamiczne do tablicy
