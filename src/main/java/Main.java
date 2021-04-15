@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws IOException {
         String[][] tasks = taskArr();
+
         String[] programMethods = {"add", "list", "remove", "exit"};
         System.out.println(ConsoleColors.BLUE + "Please select an option:" + ConsoleColors.RESET);
         for (String s : programMethods) {
@@ -28,7 +29,7 @@ public class Main {
 
             }
             if (command.equals("remove")) {
-                tasks = removeTask(tasks);
+                 tasks = removeTask(tasks);
 
             }
             if (command.equals("list")) {
@@ -54,7 +55,7 @@ public class Main {
     }
 
 
-    public static void tasksReader(String[][] tasks) throws IOException {
+    public static void tasksReader(String[][] tasks) {
         for (int i = 0; i < tasks.length; i++) {
             System.out.print(i + 1 + ": ");
             for (int j = 0; j < tasks[i].length; j++) { //this equals to the column in each row.
@@ -69,7 +70,7 @@ public class Main {
     }
 
     // metoda add DO DOPISANIA metody poprawności daty i płci
-    public static String[][] addTask(String[][] tasks) throws IOException {
+    public static String[][] addTask(String[][] tasks) {
         System.out.println("Proszę o podanie nowego zadnia do dodania");
         Scanner sc = new Scanner(System.in);
         String[] newTask = new String[3];
@@ -90,15 +91,25 @@ public class Main {
     public static String[][] removeTask(String[][] tasks) {
         System.out.println("Podaj numer zadania, który chcesz usunąć");
         Scanner sc = new Scanner(System.in);
-        int i = sc.nextInt() - 1;
-        tasks = ArrayUtils.remove(tasks, i);
-        return tasks;
+        while (true) {
+            if (sc.hasNextInt()) {
+                int i = sc.nextInt() - 1;
+                if (i >= 0 && i < tasks.length) {
+                   tasks = ArrayUtils.remove(tasks, i);
+                   return tasks;
+                }
+            } else {
+                sc.next();
+            }
+            System.out.println("Podaj prawidłową dodatnią wartość do zmiany");
+        }
+
     }
 
     //metoda exit
     public static void saveArr(String[][] tasks) {
         File file = new File("tasks.csv");
-        try (PrintWriter pw = new PrintWriter(file);) {
+        try (PrintWriter pw = new PrintWriter(file)) {
             for (String[] singleTask : tasks) {
                 for (int j = 0; j < singleTask.length; j++) {
                     if (j < singleTask.length - 1) {
