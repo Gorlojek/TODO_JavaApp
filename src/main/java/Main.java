@@ -89,7 +89,7 @@ public class Main {
 
         newTask[0] = sc.nextLine();
         System.out.println("Podaj termin wykonania zadania\nFormat daty RRRR-MM-DD ");
-        //poprawny format daty poprzez stringbuilder
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 
@@ -170,3 +170,6 @@ public class Main {
     }
 }
 
+//sprawdzac na poczatku dzialania programu czy wgl istnieje plik task csv i czy ma w sobie juz jakies zadania, to samo przy list i remove
+// poprawnosc daty mozna sprawdzac za pomoca local date
+// wypisywanie wsyszkitch elementow tablicy dwuwymiarowej to mozna za pomoca string joinow
